@@ -238,15 +238,29 @@ CREATE POLICY "Community admins can update members"
     );
 
 -- Now add the community policy that depends on community_members
+-- Helper function to avoid recursion in policies
+CREATE OR REPLACE FUNCTION public.is_community_member(_community_id UUID)
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+    RETURN EXISTS (
+        SELECT 1 
+        FROM public.community_members 
+        WHERE community_id = _community_id
+        AND user_id = auth.uid()
+        AND is_active = true
+    );
+END;
+$$;
+
+-- Connect the policy to the helper function
 CREATE POLICY "Community members can view their communities"
     ON public.community FOR SELECT
     USING (
-        EXISTS (
-            SELECT 1 FROM public.community_members cm
-            WHERE cm.community_id = community.id
-            AND cm.user_id = auth.uid()
-            AND cm.is_active = true
-        )
+        is_community_member(id)
     );
 
 -- ============================================

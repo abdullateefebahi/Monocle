@@ -239,6 +239,7 @@ class _SectorDetailScreenState extends ConsumerState<SectorDetailScreen>
         dividerColor: Colors.transparent,
         labelColor: color,
         unselectedLabelColor: AppColors.textSecondaryDark,
+        indicatorSize: TabBarIndicatorSize.tab,
         labelStyle: const TextStyle(fontWeight: FontWeight.w600),
         tabs: const [
           Tab(text: 'All'),

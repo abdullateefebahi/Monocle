@@ -42,6 +42,7 @@ final userProfileProvider = FutureProvider.autoDispose<UserModel?>((ref) async {
         : null,
     isVerified: profile['is_verified'] ?? false,
     isOnboardingComplete: profile['is_onboarding_complete'] ?? false,
+    level: profile['level'] ?? 1,
   );
 });
 

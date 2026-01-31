@@ -7,12 +7,16 @@ class SectorsRepository {
 
   SectorsRepository(this._supabase);
 
-  /// Fetch all active sectors with stats
+  /// Fetch all active sectors with stats (excludes hidden Global sector)
   Future<List<SectorModel>> getSectors() async {
     try {
       final response = await _supabase
           .from('sector_stats')
           .select()
+          .neq(
+            'id',
+            '00000000-0000-0000-0000-000000000000',
+          ) // Exclude Global sector
           .order('display_order', ascending: true);
 
       return (response as List)

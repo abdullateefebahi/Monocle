@@ -17,6 +17,7 @@ class UserModel extends Equatable {
   final DateTime? updatedAt;
   final bool isVerified;
   final bool isOnboardingComplete;
+  final int level;
   final UserStats stats;
 
   const UserModel({
@@ -31,6 +32,7 @@ class UserModel extends Equatable {
     this.updatedAt,
     this.isVerified = false,
     this.isOnboardingComplete = false,
+    this.level = 1,
     this.stats = const UserStats(),
   });
 
@@ -51,6 +53,7 @@ class UserModel extends Equatable {
     bool? isVerified,
     bool? isOnboardingComplete,
     UserStats? stats,
+    int? level,
   }) {
     return UserModel(
       id: id ?? this.id,
@@ -64,6 +67,7 @@ class UserModel extends Equatable {
       updatedAt: updatedAt ?? this.updatedAt,
       isVerified: isVerified ?? this.isVerified,
       isOnboardingComplete: isOnboardingComplete ?? this.isOnboardingComplete,
+      level: level ?? this.level,
       stats: stats ?? this.stats,
     );
   }
@@ -81,6 +85,7 @@ class UserModel extends Equatable {
     updatedAt,
     isVerified,
     isOnboardingComplete,
+    level,
     stats,
   ];
 }

@@ -37,28 +37,51 @@ class QuestModel extends Equatable {
   final String id;
   final String title;
   final String description;
+  @JsonKey(name: 'icon_url')
   final String? iconUrl;
   final QuestRarity rarity;
   final QuestType type;
+
+  @JsonKey(name: 'reward_sparks', defaultValue: 0)
   final int rewardSparks;
+
+  @JsonKey(name: 'reward_orbs', defaultValue: 0)
   final int rewardOrbs;
+
+  @JsonKey(name: 'xp_reward', defaultValue: 0)
   final int xpReward;
+
+  @JsonKey(defaultValue: [])
   final List<QuestObjective> objectives;
+
+  @JsonKey(name: 'start_date')
   final DateTime? startDate;
+
+  @JsonKey(name: 'end_date')
   final DateTime? endDate;
+
+  @JsonKey(name: 'max_completions')
   final int? maxCompletions;
+
+  @JsonKey(name: 'current_completions', defaultValue: 0)
   final int currentCompletions;
+
+  @JsonKey(name: 'is_repeatable', defaultValue: false)
   final bool isRepeatable;
-  final String? communityId; // null for global quests
+
+  @JsonKey(name: 'community_id')
+  final String? communityId; // Should be AppConstants.globalCommunityId for global quests
+
+  @JsonKey(name: 'created_at')
   final DateTime createdAt;
 
   const QuestModel({
     required this.id,
     required this.title,
     required this.description,
+    required this.type,
     this.iconUrl,
     this.rarity = QuestRarity.common,
-    required this.type,
     this.rewardSparks = 0,
     this.rewardOrbs = 0,
     this.xpReward = 0,
@@ -82,9 +105,6 @@ class QuestModel extends Equatable {
     if (endDate != null && now.isAfter(endDate!)) return false;
     return true;
   }
-
-  bool get hasReachedMaxCompletions =>
-      maxCompletions != null && currentCompletions >= maxCompletions!;
 
   @override
   List<Object?> get props => [
@@ -119,6 +139,12 @@ enum QuestType {
   event,
   @JsonValue('community')
   community,
+  @JsonValue('global')
+  global,
+  @JsonValue('sector')
+  sector,
+  @JsonValue('mission')
+  mission,
 }
 
 /// Quest objective
@@ -127,8 +153,13 @@ class QuestObjective extends Equatable {
   final String id;
   final String description;
   final ObjectiveType type;
+
+  @JsonKey(name: 'target_count', defaultValue: 1)
   final int targetCount;
+
+  @JsonKey(name: 'current_count', defaultValue: 0)
   final int currentCount;
+
   final Map<String, dynamic>? requirements;
 
   const QuestObjective({
@@ -169,10 +200,10 @@ enum ObjectiveType {
   makeTransfer,
   @JsonValue('invite_user')
   inviteUser,
-  @JsonValue('earn_sparks')
-  earnSparks,
-  @JsonValue('spend_sparks')
-  spendSparks,
+  @JsonValue('earn_shards')
+  earnShards,
+  @JsonValue('spend_shards')
+  spendShards,
   @JsonValue('login_streak')
   loginStreak,
   @JsonValue('custom')

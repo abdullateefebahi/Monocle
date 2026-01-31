@@ -20,6 +20,7 @@ UserModel _$UserModelFromJson(Map<String, dynamic> json) => UserModel(
       : DateTime.parse(json['updatedAt'] as String),
   isVerified: json['isVerified'] as bool? ?? false,
   isOnboardingComplete: json['isOnboardingComplete'] as bool? ?? false,
+  level: (json['level'] as num?)?.toInt() ?? 1,
   stats: json['stats'] == null
       ? const UserStats()
       : UserStats.fromJson(json['stats'] as Map<String, dynamic>),
@@ -37,6 +38,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
   'updatedAt': instance.updatedAt?.toIso8601String(),
   'isVerified': instance.isVerified,
   'isOnboardingComplete': instance.isOnboardingComplete,
+  'level': instance.level,
   'stats': instance.stats,
 };
 

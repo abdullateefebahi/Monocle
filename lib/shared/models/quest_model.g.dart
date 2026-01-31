@@ -10,28 +10,30 @@ QuestModel _$QuestModelFromJson(Map<String, dynamic> json) => QuestModel(
   id: json['id'] as String,
   title: json['title'] as String,
   description: json['description'] as String,
-  iconUrl: json['iconUrl'] as String?,
+  type: $enumDecode(_$QuestTypeEnumMap, json['type']),
+  iconUrl: json['icon_url'] as String?,
   rarity:
       $enumDecodeNullable(_$QuestRarityEnumMap, json['rarity']) ??
       QuestRarity.common,
-  type: $enumDecode(_$QuestTypeEnumMap, json['type']),
-  rewardSparks: (json['rewardSparks'] as num?)?.toInt() ?? 0,
-  rewardOrbs: (json['rewardOrbs'] as num?)?.toInt() ?? 0,
-  xpReward: (json['xpReward'] as num?)?.toInt() ?? 0,
-  objectives: (json['objectives'] as List<dynamic>)
-      .map((e) => QuestObjective.fromJson(e as Map<String, dynamic>))
-      .toList(),
-  startDate: json['startDate'] == null
+  rewardSparks: (json['reward_sparks'] as num?)?.toInt() ?? 0,
+  rewardOrbs: (json['reward_orbs'] as num?)?.toInt() ?? 0,
+  xpReward: (json['xp_reward'] as num?)?.toInt() ?? 0,
+  objectives:
+      (json['objectives'] as List<dynamic>?)
+          ?.map((e) => QuestObjective.fromJson(e as Map<String, dynamic>))
+          .toList() ??
+      [],
+  startDate: json['start_date'] == null
       ? null
-      : DateTime.parse(json['startDate'] as String),
-  endDate: json['endDate'] == null
+      : DateTime.parse(json['start_date'] as String),
+  endDate: json['end_date'] == null
       ? null
-      : DateTime.parse(json['endDate'] as String),
-  maxCompletions: (json['maxCompletions'] as num?)?.toInt(),
-  currentCompletions: (json['currentCompletions'] as num?)?.toInt() ?? 0,
-  isRepeatable: json['isRepeatable'] as bool? ?? false,
-  communityId: json['communityId'] as String?,
-  createdAt: DateTime.parse(json['createdAt'] as String),
+      : DateTime.parse(json['end_date'] as String),
+  maxCompletions: (json['max_completions'] as num?)?.toInt(),
+  currentCompletions: (json['current_completions'] as num?)?.toInt() ?? 0,
+  isRepeatable: json['is_repeatable'] as bool? ?? false,
+  communityId: json['community_id'] as String?,
+  createdAt: DateTime.parse(json['created_at'] as String),
 );
 
 Map<String, dynamic> _$QuestModelToJson(QuestModel instance) =>
@@ -39,21 +41,32 @@ Map<String, dynamic> _$QuestModelToJson(QuestModel instance) =>
       'id': instance.id,
       'title': instance.title,
       'description': instance.description,
-      'iconUrl': instance.iconUrl,
+      'icon_url': instance.iconUrl,
       'rarity': _$QuestRarityEnumMap[instance.rarity]!,
       'type': _$QuestTypeEnumMap[instance.type]!,
-      'rewardSparks': instance.rewardSparks,
-      'rewardOrbs': instance.rewardOrbs,
-      'xpReward': instance.xpReward,
+      'reward_sparks': instance.rewardSparks,
+      'reward_orbs': instance.rewardOrbs,
+      'xp_reward': instance.xpReward,
       'objectives': instance.objectives,
-      'startDate': instance.startDate?.toIso8601String(),
-      'endDate': instance.endDate?.toIso8601String(),
-      'maxCompletions': instance.maxCompletions,
-      'currentCompletions': instance.currentCompletions,
-      'isRepeatable': instance.isRepeatable,
-      'communityId': instance.communityId,
-      'createdAt': instance.createdAt.toIso8601String(),
+      'start_date': instance.startDate?.toIso8601String(),
+      'end_date': instance.endDate?.toIso8601String(),
+      'max_completions': instance.maxCompletions,
+      'current_completions': instance.currentCompletions,
+      'is_repeatable': instance.isRepeatable,
+      'community_id': instance.communityId,
+      'created_at': instance.createdAt.toIso8601String(),
     };
+
+const _$QuestTypeEnumMap = {
+  QuestType.daily: 'daily',
+  QuestType.weekly: 'weekly',
+  QuestType.story: 'story',
+  QuestType.event: 'event',
+  QuestType.community: 'community',
+  QuestType.global: 'global',
+  QuestType.sector: 'sector',
+  QuestType.mission: 'mission',
+};
 
 const _$QuestRarityEnumMap = {
   QuestRarity.common: 'common',
@@ -63,21 +76,13 @@ const _$QuestRarityEnumMap = {
   QuestRarity.legendary: 'legendary',
 };
 
-const _$QuestTypeEnumMap = {
-  QuestType.daily: 'daily',
-  QuestType.weekly: 'weekly',
-  QuestType.story: 'story',
-  QuestType.event: 'event',
-  QuestType.community: 'community',
-};
-
 QuestObjective _$QuestObjectiveFromJson(Map<String, dynamic> json) =>
     QuestObjective(
       id: json['id'] as String,
       description: json['description'] as String,
       type: $enumDecode(_$ObjectiveTypeEnumMap, json['type']),
-      targetCount: (json['targetCount'] as num).toInt(),
-      currentCount: (json['currentCount'] as num?)?.toInt() ?? 0,
+      targetCount: (json['target_count'] as num?)?.toInt() ?? 1,
+      currentCount: (json['current_count'] as num?)?.toInt() ?? 0,
       requirements: json['requirements'] as Map<String, dynamic>?,
     );
 
@@ -86,8 +91,8 @@ Map<String, dynamic> _$QuestObjectiveToJson(QuestObjective instance) =>
       'id': instance.id,
       'description': instance.description,
       'type': _$ObjectiveTypeEnumMap[instance.type]!,
-      'targetCount': instance.targetCount,
-      'currentCount': instance.currentCount,
+      'target_count': instance.targetCount,
+      'current_count': instance.currentCount,
       'requirements': instance.requirements,
     };
 
@@ -97,8 +102,8 @@ const _$ObjectiveTypeEnumMap = {
   ObjectiveType.completeProfile: 'complete_profile',
   ObjectiveType.makeTransfer: 'make_transfer',
   ObjectiveType.inviteUser: 'invite_user',
-  ObjectiveType.earnSparks: 'earn_sparks',
-  ObjectiveType.spendSparks: 'spend_sparks',
+  ObjectiveType.earnShards: 'earn_shards',
+  ObjectiveType.spendShards: 'spend_shards',
   ObjectiveType.loginStreak: 'login_streak',
   ObjectiveType.custom: 'custom',
 };

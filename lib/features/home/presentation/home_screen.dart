@@ -2,8 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
+import 'package:intl/intl.dart';
 import '../../communities/presentation/communities_screen.dart';
 import '../../wallet/presentation/wallet_screen.dart';
+import '../../quests/presentation/quests_screen.dart';
+import '../../wallet/data/wallet_repository.dart';
+import '../../../core/providers/app_providers.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -36,10 +40,45 @@ class DesktopDashboardLayout extends ConsumerStatefulWidget {
 class _DesktopDashboardLayoutState
     extends ConsumerState<DesktopDashboardLayout> {
   int _selectedIndex = 0;
+  int? _initialSparkBalance;
+  int? _initialOrbBalance;
 
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    final walletAsync = ref.watch(walletStreamProvider);
+    final profileAsync = ref.watch(userProfileProvider);
+
+    final wallet = walletAsync.value;
+    final profile = profileAsync.value;
+
+    final currencyFormatter = NumberFormat.decimalPattern();
+    final formattedShards = wallet != null
+        ? currencyFormatter.format(wallet.sparkBalance)
+        : '0';
+    final formattedOrbs = wallet != null
+        ? currencyFormatter.format(wallet.orbBalance)
+        : '0';
+    final level = profile?.level ?? 1;
+    final avatarLetter = (profile?.username?.isNotEmpty == true)
+        ? profile!.username![0].toUpperCase()
+        : 'U';
+
+    // Calculate session changes
+    if (wallet != null) {
+      if (_initialSparkBalance == null) {
+        _initialSparkBalance = wallet.sparkBalance;
+        _initialOrbBalance = wallet.orbBalance;
+      }
+    }
+
+    final sparkChange = (wallet != null && _initialSparkBalance != null)
+        ? wallet.sparkBalance - _initialSparkBalance!
+        : 0;
+
+    final orbChange = (wallet != null && _initialOrbBalance != null)
+        ? wallet.orbBalance - _initialOrbBalance!
+        : 0;
 
     return Scaffold(
       body: Container(
@@ -57,6 +96,8 @@ class _DesktopDashboardLayoutState
               flex: 5,
               child: _selectedIndex == 1
                   ? const SectorsScreen()
+                  : _selectedIndex == 2
+                  ? const QuestsScreen()
                   : _selectedIndex == 3
                   ? const WalletScreen()
                   : Padding(
@@ -214,7 +255,7 @@ class _DesktopDashboardLayoutState
                           ),
                           const SizedBox(width: 4),
                           Text(
-                            'Level 7',
+                            'Level $level',
                             style: theme.textTheme.labelMedium?.copyWith(
                               color: Colors.white,
                             ),
@@ -223,14 +264,19 @@ class _DesktopDashboardLayoutState
                           CircleAvatar(
                             radius: 12,
                             backgroundColor: AppColors.cyanAccent,
-                            child: const Text(
-                              'U',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 10,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
+                            backgroundImage: profile?.avatarUrl != null
+                                ? NetworkImage(profile!.avatarUrl!)
+                                : null,
+                            child: profile?.avatarUrl == null
+                                ? Text(
+                                    avatarLetter,
+                                    style: const TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.bold,
+                                    ),
+                                  )
+                                : null,
                           ),
                         ],
                       ),
@@ -242,17 +288,16 @@ class _DesktopDashboardLayoutState
                   _CurrencyStat(
                     icon: '⚡',
                     label: 'Shards',
-                    value: '9,256',
-                    change: '45',
+                    value: formattedShards,
+                    change: sparkChange,
                     color: AppColors.spark,
                   ),
                   const SizedBox(height: 16),
                   _CurrencyStat(
                     icon: '🔮',
-                    label:
-                        'Orbs', // Replaced "11,230" with Orbs label for clarity based on context
-                    value: '1,230',
-                    change: '45',
+                    label: 'Orbs',
+                    value: formattedOrbs,
+                    change: orbChange,
                     color: AppColors.orb,
                   ),
                   const SizedBox(height: 48),
@@ -909,7 +954,7 @@ class _CurrencyStat extends StatelessWidget {
   final String icon;
   final String label;
   final String value;
-  final String change;
+  final int change;
   final Color color;
 
   const _CurrencyStat({
@@ -922,6 +967,30 @@ class _CurrencyStat extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Determine icon and color based on change
+    final isPositive = change > 0;
+    final isNegative = change < 0;
+
+    final changeText = isPositive
+        ? '+ $change'
+        : isNegative
+        ? '- ${change.abs()}'
+        : '0';
+
+    final changeIcon = isPositive
+        ? Icons.arrow_upward
+        : isNegative
+        ? Icons.arrow_downward
+        : Icons.remove;
+
+    final changeColor = isPositive
+        ? AppColors.emeraldGreen
+        : isNegative
+        ? AppColors.secondary
+        : AppColors.textSecondaryDark;
+
+    final bgAlpha = (change == 0) ? 0.05 : 0.1;
+
     return Container(
       padding: const EdgeInsets.all(12),
       decoration: BoxDecoration(
@@ -966,16 +1035,16 @@ class _CurrencyStat extends StatelessWidget {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(
-              color: Colors.white.withValues(alpha: 0.05),
+              color: changeColor.withValues(alpha: bgAlpha),
               borderRadius: BorderRadius.circular(4),
             ),
             child: Row(
               children: [
-                const Icon(Icons.arrow_upward, size: 10, color: Colors.grey),
+                Icon(changeIcon, size: 10, color: changeColor),
                 const SizedBox(width: 2),
                 Text(
-                  change,
-                  style: const TextStyle(color: Colors.grey, fontSize: 10),
+                  changeText,
+                  style: TextStyle(color: changeColor, fontSize: 10),
                 ),
               ],
             ),
@@ -1225,6 +1294,8 @@ class _MobileDashboardLayoutState extends ConsumerState<MobileDashboardLayout> {
       // Main Body
       body: _currentIndex == 1
           ? const SectorsScreen()
+          : _currentIndex == 2
+          ? const QuestsScreen()
           : _currentIndex == 3
           ? const WalletScreen()
           : SingleChildScrollView(
@@ -1245,7 +1316,7 @@ class _MobileDashboardLayoutState extends ConsumerState<MobileDashboardLayout> {
                             icon: '⚡',
                             label: 'Shards',
                             value: '9,256',
-                            change: '45',
+                            change: 0,
                             color: AppColors.spark,
                           ),
                         ),
@@ -1256,7 +1327,7 @@ class _MobileDashboardLayoutState extends ConsumerState<MobileDashboardLayout> {
                             icon: '🔮',
                             label: 'Orbs',
                             value: '1,230',
-                            change: '12',
+                            change: 0,
                             color: AppColors.orb,
                           ),
                         ),

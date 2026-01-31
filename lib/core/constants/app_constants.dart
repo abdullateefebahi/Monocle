@@ -59,7 +59,12 @@ class AppConstants {
   // Profile Limits
   static const int maxBioLength = 500;
   static const int maxUsernameLength = 30;
+
   static const int minUsernameLength = 3;
+
+  // Global Community ID
+  static const String globalCommunityId =
+      '00000000-0000-0000-0000-000000000000'; // Default Global ID
 }
 
 /// API Endpoints for Go Backend

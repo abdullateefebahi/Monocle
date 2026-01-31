@@ -84,7 +84,7 @@ class WalletScreen extends ConsumerWidget {
     return Column(
       children: [
         _buildCurrencyCard(
-          title: 'Sparks Balance',
+          title: 'Shards Balance',
           amount: wallet.sparkBalance,
           icon: Icons.flash_on,
           color: AppColors.cyanAccent,
