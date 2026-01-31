@@ -24,6 +24,18 @@ type HealthCheck struct {
 	Version   string `json:"version"`
 }
 
+// Track server start time for uptime
+var startTime = time.Now()
+
+func init() {
+	fmt.Println(`
+╔══════════════════════════════════════╗
+║         MONOCLE API SERVER           ║
+║      Connect. Engage. Earn.          ║
+╚══════════════════════════════════════╝
+	`)
+}
+
 func main() {
 	// Get port from environment variable (for deployment platforms like Render, Railway)
 	port := os.Getenv("PORT")
@@ -31,38 +43,24 @@ func main() {
 		port = "8080" // Fallback for local dev
 	}
 
-	// Setup routes
-	http.HandleFunc("/", handleRoot)
+	// Serve static files from the "public" directory (Flutter Web build)
+	fs := http.FileServer(http.Dir("./public"))
+	http.Handle("/", fs)
+
+	// API routes
 	http.HandleFunc("/health", handleHealth)
 	http.HandleFunc("/api/v1/status", handleStatus)
+	http.HandleFunc("/api/v1/shards/transfer", handleShardTransaction)
 
 	// Start server
 	addr := ":" + port
 	log.Printf("🚀 Monocle API Server starting on http://localhost%s", addr)
 	log.Printf("📍 Health check: http://localhost%s/health", addr)
+	log.Printf("📂 Serving Flutter Web from ./public")
 
 	if err := http.ListenAndServe(addr, nil); err != nil {
 		log.Fatalf("❌ Server failed to start: %v", err)
 	}
-}
-
-// handleRoot - Welcome endpoint
-func handleRoot(w http.ResponseWriter, r *http.Request) {
-	if r.URL.Path != "/" {
-		http.NotFound(w, r)
-		return
-	}
-
-	response := Response{
-		Success: true,
-		Message: "Welcome to Monocle API",
-		Data: map[string]string{
-			"version": "1.0.0",
-			"docs":    "/api/v1/docs",
-		},
-	}
-
-	sendJSON(w, http.StatusOK, response)
 }
 
 // handleHealth - Health check endpoint for monitoring
@@ -91,6 +89,27 @@ func handleStatus(w http.ResponseWriter, r *http.Request) {
 	sendJSON(w, http.StatusOK, response)
 }
 
+// handleShardTransaction - Handle shard transfers between users
+func handleShardTransaction(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		sendJSON(w, http.StatusMethodNotAllowed, Response{
+			Success: false,
+			Error:   "Method not allowed. Use POST.",
+		})
+		return
+	}
+
+	// TODO: Implement shard transfer logic
+	// 1. Read: Look at 'r' (the Request) to see who is sending Shards.
+	// 2. Logic: Check the database to see if they have enough balance.
+	// 3. Write: Use 'w' (the ResponseWriter) to send back a "Success" or "Error" message.
+
+	sendJSON(w, http.StatusOK, Response{
+		Success: true,
+		Message: "Shard transfer endpoint ready (not yet implemented)",
+	})
+}
+
 // sendJSON writes a JSON response
 func sendJSON(w http.ResponseWriter, status int, data interface{}) {
 	w.Header().Set("Content-Type", "application/json")
@@ -110,16 +129,4 @@ func getEnv(key, fallback string) string {
 		return value
 	}
 	return fallback
-}
-
-// Track server start time for uptime
-var startTime = time.Now()
-
-func init() {
-	fmt.Println(`
-╔══════════════════════════════════════╗
-║         MONOCLE API SERVER           ║
-║      Connect. Engage. Earn.          ║
-╚══════════════════════════════════════╝
-	`)
 }
