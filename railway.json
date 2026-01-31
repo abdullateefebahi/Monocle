@@ -4,7 +4,9 @@
         "builder": "NIXPACKS"
     },
     "deploy": {
-        "startCommand": "go run main.go",
-        "restartPolicyType": "ON_FAILURE"
+        "startCommand": "go build -o monocle-api main.go && ./monocle-api",
+        "restartPolicyType": "ON_FAILURE",
+        "healthcheckPath": "/health",
+        "healthcheckTimeout": 30
     }
 }
