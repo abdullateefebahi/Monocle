@@ -57,6 +57,6 @@ flutter:
 
   assets:
     - .env
-    - /vercel/path0/assets/images/
-    - /vercel/path0/assets/icons/
-    - /vercel/path0/assets/animations/
+    - assets/images/
+    - assets/icons/
+    - assets/animations/
