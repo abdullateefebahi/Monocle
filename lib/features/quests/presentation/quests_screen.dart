@@ -358,11 +358,41 @@ class _QuestCard extends StatelessWidget {
       case QuestType.global:
         return AppColors.royalPurple;
       case QuestType.sector:
-        return AppColors.cyanAccent; // Or specific sector color
-      case QuestType.mission:
+        return AppColors.cyanAccent;
+      case QuestType.community:
         return AppColors.success;
       default:
         return AppColors.primary;
+    }
+  }
+
+  Color _getRarityColor() {
+    switch (quest.rarity) {
+      case QuestRarity.common:
+        return Colors.grey;
+      case QuestRarity.uncommon:
+        return Colors.green;
+      case QuestRarity.rare:
+        return Colors.blue;
+      case QuestRarity.epic:
+        return Colors.orange;
+      case QuestRarity.legendary:
+        return Colors.purple;
+    }
+  }
+
+  String _getRarityName() {
+    switch (quest.rarity) {
+      case QuestRarity.common:
+        return 'Common';
+      case QuestRarity.uncommon:
+        return 'Uncommon';
+      case QuestRarity.rare:
+        return 'Rare';
+      case QuestRarity.epic:
+        return 'Epic';
+      case QuestRarity.legendary:
+        return 'Legendary';
     }
   }
 
@@ -397,7 +427,7 @@ class _QuestCard extends StatelessWidget {
                     border: Border.all(color: color.withValues(alpha: 0.3)),
                   ),
                   child: Icon(
-                    type == QuestType.mission ? Icons.groups : Icons.public,
+                    type == QuestType.community ? Icons.groups : Icons.public,
                     color: color,
                   ),
                 ),
@@ -408,6 +438,29 @@ class _QuestCard extends StatelessWidget {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
+                      // Rarity Badge
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                          horizontal: 8,
+                          vertical: 3,
+                        ),
+                        margin: const EdgeInsets.only(bottom: 6),
+                        decoration: BoxDecoration(
+                          color: _getRarityColor().withValues(alpha: 0.2),
+                          borderRadius: BorderRadius.circular(6),
+                          border: Border.all(
+                            color: _getRarityColor().withValues(alpha: 0.5),
+                          ),
+                        ),
+                        child: Text(
+                          _getRarityName(),
+                          style: TextStyle(
+                            color: _getRarityColor(),
+                            fontSize: 10,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
                       Text(
                         quest.title,
                         style: GoogleFonts.outfit(
