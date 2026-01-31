@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../../../core/theme/app_colors.dart';
 import '../../communities/presentation/communities_screen.dart';
+import '../../wallet/presentation/wallet_screen.dart';
 
 class HomeScreen extends ConsumerWidget {
   const HomeScreen({super.key});
@@ -56,6 +57,8 @@ class _DesktopDashboardLayoutState
               flex: 5,
               child: _selectedIndex == 1
                   ? const SectorsScreen()
+                  : _selectedIndex == 3
+                  ? const WalletScreen()
                   : Padding(
                       padding: const EdgeInsets.only(
                         top: 24,
@@ -1222,6 +1225,8 @@ class _MobileDashboardLayoutState extends ConsumerState<MobileDashboardLayout> {
       // Main Body
       body: _currentIndex == 1
           ? const SectorsScreen()
+          : _currentIndex == 3
+          ? const WalletScreen()
           : SingleChildScrollView(
               padding: const EdgeInsets.all(16),
               child: Column(

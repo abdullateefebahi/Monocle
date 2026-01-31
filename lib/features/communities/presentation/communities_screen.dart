@@ -152,7 +152,7 @@ class _SectorsScreenState extends ConsumerState<SectorsScreen> {
               ),
             ),
             loading: () => const SizedBox.shrink(),
-            error: (_, __) => const SizedBox.shrink(),
+            error: (error, stack) => const SizedBox.shrink(),
           ),
         ],
       ),

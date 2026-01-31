@@ -94,12 +94,7 @@ class WalletNotifier extends StateNotifier<AsyncValue<WalletModel?>> {
 
   WalletModel? _mapToWallet(Map<String, dynamic>? data) {
     if (data == null) return null;
-    return WalletModel(
-      userId: data['user_id'],
-      shardBalance: data['shard_balance'] ?? 0,
-      orbBalance: data['orb_balance'] ?? 0,
-      lastUpdated: DateTime.parse(data['last_updated']),
-    );
+    return WalletModel.fromJson(data);
   }
 
   void _subscribeToUpdates(String userId) {
@@ -115,21 +110,6 @@ class WalletNotifier extends StateNotifier<AsyncValue<WalletModel?>> {
     super.dispose();
   }
 }
-
-/// Transactions provider
-final transactionsProvider = FutureProvider.autoDispose
-    .family<List<TransactionModel>, int>((ref, page) async {
-      final user = ref.watch(currentUserProvider);
-      if (user == null) return [];
-
-      final offset = page * 20;
-      final transactions = await SupabaseService.instance.getTransactions(
-        user.id,
-        offset: offset,
-      );
-
-      return transactions.map((t) => TransactionModel.fromJson(t)).toList();
-    });
 
 /// Theme mode provider
 enum AppThemeMode { light, dark, system }

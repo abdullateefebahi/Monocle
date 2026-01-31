@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/supabase_service.dart';
 import '../../../shared/models/wallet_model.dart';
-import '../../auth/presentation/auth_controller.dart';
+import '../../../core/providers/app_providers.dart';
 
 // Repository
 class WalletRepository {
@@ -49,14 +49,11 @@ final walletStreamProvider = StreamProvider.autoDispose<WalletModel>((ref) {
   final repository = ref.watch(walletRepositoryProvider);
 
   // Watch auth state to get current user ID
-  final authState = ref.watch(authControllerProvider);
+  final user = ref.watch(currentUserProvider);
 
-  return authState.when(
-    data: (user) {
-      if (user == null) return const Stream.empty();
-      return repository.streamWallet(user.id);
-    },
-    loading: () => const Stream.empty(),
-    error: (_, __) => const Stream.empty(),
-  );
+  if (user == null) {
+    return const Stream.empty();
+  }
+
+  return repository.streamWallet(user.id);
 });
