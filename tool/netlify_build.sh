@@ -45,7 +45,8 @@ flutter config --enable-web
 flutter pub get
 
 # Build the web application
-flutter build web --release --no-tree-shake-icons
+# Using HTML renderer for better compatibility and to avoid CORS issues with CanvasKit on Netlify
+flutter build web --release --web-renderer html --no-tree-shake-icons --no-wasm-dry-run
 
 echo "========================================================="
 echo "  Build Complete!"
