@@ -11,7 +11,12 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   // Load environment variables
-  await dotenv.load(fileName: '.env');
+  try {
+    await dotenv.load(fileName: '.env');
+  } catch (e) {
+    // Continue without .env file - will verify fallback/dart-define later
+    debugPrint('Warning: Failed to load .env file: $e');
+  }
 
   // Set preferred orientations
   await SystemChrome.setPreferredOrientations([

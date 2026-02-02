@@ -49,8 +49,15 @@ flutter config --enable-web
 flutter pub get
 
 # Build the web application
-# Using HTML renderer for better compatibility and to avoid CORS issues with CanvasKit on Netlify
-flutter build web --release --web-renderer html --no-tree-shake-icons --no-wasm-dry-run
+# Using HTML renderer and passing env vars via --dart-define for robustness (bakes them into the app)
+flutter build web --release \
+  --web-renderer html \
+  --no-tree-shake-icons \
+  --no-wasm-dry-run \
+  --dart-define=SUPABASE_URL=$SUPABASE_URL \
+  --dart-define=SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY \
+  --dart-define=GO_API_BASE_URL=$GO_API_BASE_URL \
+  --dart-define=PAYSTACK_PUBLIC_KEY=$PAYSTACK_PUBLIC_KEY
 
 echo "========================================================="
 echo "  Build Complete!"

@@ -9,26 +9,33 @@ class AppConstants {
   static const String appVersion = '1.0.0';
   static const String appTagline = 'Connect. Engage. Earn.';
 
-  // Supabase Configuration (loaded from .env file)
-  static String get supabaseUrl =>
-      dotenv.env['SUPABASE_URL'] ?? _throwEnvError('SUPABASE_URL');
-  static String get supabaseAnonKey =>
-      dotenv.env['SUPABASE_ANON_KEY'] ?? _throwEnvError('SUPABASE_ANON_KEY');
+  // Supabase Configuration
+  // 1. Try .env file
+  // 2. Try --dart-define (compile time)
+  // 3. Throw error (or use placeholder for safe failure)
+  static String get supabaseUrl {
+    return dotenv.env['SUPABASE_URL'] ??
+        (const String.fromEnvironment('SUPABASE_URL') != ''
+            ? const String.fromEnvironment('SUPABASE_URL')
+            : 'https://placeholder.supabase.co'); // Fallback to prevent startup crash
+  }
 
-  // Go Backend API (loaded from .env file)
-  static String get goApiBaseUrl =>
-      dotenv.env['GO_API_BASE_URL'] ?? 'http://localhost:8080';
+  static String get supabaseAnonKey {
+    return dotenv.env['SUPABASE_ANON_KEY'] ??
+        (const String.fromEnvironment('SUPABASE_ANON_KEY') != ''
+            ? const String.fromEnvironment('SUPABASE_ANON_KEY')
+            : 'placeholder-key');
+  }
 
-  static String _throwEnvError(String key) {
-    throw Exception(
-      'Missing required environment variable: $key\n'
-      'Please create a .env file in the project root with this variable.\n'
-      'See .env.example for reference.',
-    );
+  // Go Backend API
+  static String get goApiBaseUrl {
+    return dotenv.env["GO_API_BASE_URL"] ??
+        const String.fromEnvironment("GO_API_BASE_URL",
+            defaultValue: 'http://localhost:8080');
   }
 
   // Currency Names
-  static const String softCurrencyName = 'Sparks';
+  static const String softCurrencyName = 'Shards';
   static const String hardCurrencyName = 'Orbs';
   static const String softCurrencySymbol = '⚡';
   static const String hardCurrencySymbol = '🔮';
