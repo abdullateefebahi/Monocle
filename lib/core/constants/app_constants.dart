@@ -14,24 +14,40 @@ class AppConstants {
   // 2. Try --dart-define (compile time)
   // 3. Throw error (or use placeholder for safe failure)
   static String get supabaseUrl {
-    return dotenv.env['SUPABASE_URL'] ??
-        (const String.fromEnvironment('SUPABASE_URL') != ''
-            ? const String.fromEnvironment('SUPABASE_URL')
-            : 'https://placeholder.supabase.co'); // Fallback to prevent startup crash
+    final envUrl = dotenv.env['SUPABASE_URL'];
+    if (envUrl != null && envUrl.isNotEmpty) {
+      return envUrl;
+    }
+    const dartDefineUrl = String.fromEnvironment('SUPABASE_URL');
+    if (dartDefineUrl.isNotEmpty) {
+      return dartDefineUrl;
+    }
+    return 'https://placeholder.supabase.co'; // Fallback to prevent startup crash
   }
 
   static String get supabaseAnonKey {
-    return dotenv.env['SUPABASE_ANON_KEY'] ??
-        (const String.fromEnvironment('SUPABASE_ANON_KEY') != ''
-            ? const String.fromEnvironment('SUPABASE_ANON_KEY')
-            : 'placeholder-key');
+    final envKey = dotenv.env['SUPABASE_ANON_KEY'];
+    if (envKey != null && envKey.isNotEmpty) {
+      return envKey;
+    }
+    const dartDefineKey = String.fromEnvironment('SUPABASE_ANON_KEY');
+    if (dartDefineKey.isNotEmpty) {
+      return dartDefineKey;
+    }
+    return 'placeholder-key';
   }
 
   // Go Backend API
   static String get goApiBaseUrl {
-    return dotenv.env["GO_API_BASE_URL"] ??
-        const String.fromEnvironment("GO_API_BASE_URL",
-            defaultValue: 'http://localhost:8080');
+    final envUrl = dotenv.env['GO_API_BASE_URL'];
+    if (envUrl != null && envUrl.isNotEmpty) {
+      return envUrl;
+    }
+    const dartDefineUrl = String.fromEnvironment('GO_API_BASE_URL');
+    if (dartDefineUrl.isNotEmpty) {
+      return dartDefineUrl;
+    }
+    return 'http://localhost:8080';
   }
 
   // Currency Names
