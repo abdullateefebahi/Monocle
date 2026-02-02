@@ -3,12 +3,21 @@
 # Exit immediately if a command exits with a non-zero status
 set -e
 
-# Define Flutter version
-FLUTTER_VERSION="3.19.0" # or "stable"
-
 echo "========================================================="
 echo "  Setting up Flutter environment on Netlify"
 echo "========================================================="
+
+# Create .env file from Netlify environment variables
+echo "Creating .env file from environment variables..."
+cat > .env << EOF
+SUPABASE_URL=$SUPABASE_URL
+SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY
+GO_API_BASE_URL=$GO_API_BASE_URL
+PAYSTACK_PUBLIC_KEY=$PAYSTACK_PUBLIC_KEY
+EOF
+
+echo ".env file created with contents:"
+cat .env
 
 # Create a directory for the Flutter SDK
 mkdir -p _flutter
