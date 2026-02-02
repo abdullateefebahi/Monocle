@@ -1,0 +1,27 @@
+[build]
+  # Base directory is the root of the repo
+  base = "."
+  
+  # Command to run (installs Flutter & builds)
+  command = "sh tool/netlify_build.sh"
+  
+  # Directory where the build artifacts are located
+  publish = "build/web"
+
+  # Directory for Netlify functions (optional, if you plan to use them)
+  functions = "netlify/functions"
+
+[[redirects]]
+  # Redirects for Single Page Application (SPA) support
+  # Allows Flutter routing (e.g., /dashboard, /profile) to work on refresh
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+[[headers]]
+  # Security and caching headers
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"

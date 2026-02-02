@@ -1,6 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/supabase_service.dart';
+import '../../../shared/models/transaction_model.dart';
 import '../../../shared/models/wallet_model.dart';
 import '../../../core/providers/app_providers.dart';
 
@@ -23,6 +24,28 @@ class WalletRepository {
           }
           return WalletModel.fromJson(data.first);
         });
+  }
+
+  // Fetch recent transactions
+  Future<List<TransactionModel>> fetchTransactions(String userId,
+      {int limit = 20}) async {
+    try {
+      final response = await _supabase
+          .from('transactions')
+          .select()
+          .eq('user_id', userId)
+          .order('created_at', ascending: false)
+          .limit(limit);
+
+      return (response as List)
+          .map((json) => TransactionModel.fromJson(json))
+          .toList();
+    } catch (e) {
+      // Return empty list instead of throwing for better UX (or handle error upstream)
+      // For now, let's just log and return empty if table doesn't exist yet
+      print('Error fetching transactions: $e');
+      return [];
+    }
   }
 
   // Claim Daily Bonus
@@ -56,4 +79,11 @@ final walletStreamProvider = StreamProvider.autoDispose<WalletModel>((ref) {
   }
 
   return repository.streamWallet(user.id);
+});
+
+// Transactions Provider
+final transactionsProvider = FutureProvider.autoDispose
+    .family<List<TransactionModel>, String>((ref, userId) {
+  final repository = ref.read(walletRepositoryProvider);
+  return repository.fetchTransactions(userId);
 });

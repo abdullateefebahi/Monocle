@@ -71,7 +71,7 @@ app.*.map.json
 *.mocks.dart
 
 # Ignore SQL files (database schema - keep in separate repo)
-*.sql
+# *.sql
 
 # Ignore Go/backend files (deploy separately)
 *.go
