@@ -26,11 +26,10 @@ CommunityModel _$CommunityModelFromJson(Map<String, dynamic> json) =>
       settings: json['settings'] == null
           ? const CommunitySettings()
           : CommunitySettings.fromJson(
-              json['settings'] as Map<String, dynamic>,
-            ),
+              json['settings'] as Map<String, dynamic>),
       tags:
           (json['tags'] as List<dynamic>?)?.map((e) => e as String).toList() ??
-          const [],
+              const [],
     );
 
 Map<String, dynamic> _$CommunityModelToJson(CommunityModel instance) =>
@@ -71,30 +70,29 @@ Map<String, dynamic> _$CommunitySettingsToJson(CommunitySettings instance) =>
     };
 
 CommunityMemberModel _$CommunityMemberModelFromJson(
-  Map<String, dynamic> json,
-) => CommunityMemberModel(
-  id: json['id'] as String,
-  communityId: json['communityId'] as String,
-  userId: json['userId'] as String,
-  role:
-      $enumDecodeNullable(_$CommunityRoleEnumMap, json['role']) ??
-      CommunityRole.member,
-  joinedAt: DateTime.parse(json['joinedAt'] as String),
-  isActive: json['isActive'] as bool? ?? true,
-  customRoleData: json['customRoleData'] as Map<String, dynamic>?,
-);
+        Map<String, dynamic> json) =>
+    CommunityMemberModel(
+      id: json['id'] as String,
+      communityId: json['communityId'] as String,
+      userId: json['userId'] as String,
+      role: $enumDecodeNullable(_$CommunityRoleEnumMap, json['role']) ??
+          CommunityRole.member,
+      joinedAt: DateTime.parse(json['joinedAt'] as String),
+      isActive: json['isActive'] as bool? ?? true,
+      customRoleData: json['customRoleData'] as Map<String, dynamic>?,
+    );
 
 Map<String, dynamic> _$CommunityMemberModelToJson(
-  CommunityMemberModel instance,
-) => <String, dynamic>{
-  'id': instance.id,
-  'communityId': instance.communityId,
-  'userId': instance.userId,
-  'role': _$CommunityRoleEnumMap[instance.role]!,
-  'joinedAt': instance.joinedAt.toIso8601String(),
-  'isActive': instance.isActive,
-  'customRoleData': instance.customRoleData,
-};
+        CommunityMemberModel instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'communityId': instance.communityId,
+      'userId': instance.userId,
+      'role': _$CommunityRoleEnumMap[instance.role]!,
+      'joinedAt': instance.joinedAt.toIso8601String(),
+      'isActive': instance.isActive,
+      'customRoleData': instance.customRoleData,
+    };
 
 const _$CommunityRoleEnumMap = {
   CommunityRole.owner: 'owner',
@@ -104,17 +102,16 @@ const _$CommunityRoleEnumMap = {
 };
 
 ChannelModel _$ChannelModelFromJson(Map<String, dynamic> json) => ChannelModel(
-  id: json['id'] as String,
-  communityId: json['communityId'] as String,
-  name: json['name'] as String,
-  description: json['description'] as String?,
-  type:
-      $enumDecodeNullable(_$ChannelTypeEnumMap, json['type']) ??
-      ChannelType.text,
-  isDefault: json['isDefault'] as bool? ?? false,
-  position: (json['position'] as num?)?.toInt() ?? 0,
-  createdAt: DateTime.parse(json['createdAt'] as String),
-);
+      id: json['id'] as String,
+      communityId: json['communityId'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String?,
+      type: $enumDecodeNullable(_$ChannelTypeEnumMap, json['type']) ??
+          ChannelType.text,
+      isDefault: json['isDefault'] as bool? ?? false,
+      position: (json['position'] as num?)?.toInt() ?? 0,
+      createdAt: DateTime.parse(json['createdAt'] as String),
+    );
 
 Map<String, dynamic> _$ChannelModelToJson(ChannelModel instance) =>
     <String, dynamic>{

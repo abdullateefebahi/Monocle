@@ -1,145 +1,109 @@
-# 👁️ Project Monocle
+# Monocle
+
+**Connect. Engage. Earn.**
 
 A cross-platform digital ecosystem for social interactions with a gamified economy.
 
-## 🌟 Features
+## Features
 
-- **Cross-Platform**: Native experience on Web, Android, iOS, Linux, macOS, and Windows
-- **Dual-Token Economy**: Sparks (soft currency) & Orbs (hard currency)
-- **Limitless Communities**: Role-based communities with custom tools
-- **Gamification Engine**: Quests, Missions, and Events
-- **Real-time Chat**: WebSocket-powered messaging
-- **Secure Authentication**: Supabase Auth (Email, Social, Magic Link)
+- 🎮 **Gamified Economy** - Earn Shards and Orbs through quests and activities
+- 👥 **Communities** - Join and interact with communities organized by sectors
+- 📋 **Quests System** - Complete daily, weekly, and global quests for rewards
+- 💰 **Wallet** - Manage your digital currency and make transfers
+- 🏆 **Leveling System** - Progress through levels and unlock new features
 
-## 🏗️ Architecture
+## Tech Stack
+
+- **Frontend**: Flutter (iOS, Android, Web)
+- **Backend**: Supabase (PostgreSQL, Auth, Realtime)
+- **State Management**: Riverpod
+- **Navigation**: GoRouter
+
+## Getting Started
+
+### Prerequisites
+
+- Flutter SDK 3.0.0+
+- Dart SDK 3.0.0+
+- Supabase project
+
+### Setup
+
+1. Clone the repository:
+```bash
+git clone https://github.com/yourusername/monocle_app.git
+cd monocle_app
+```
+
+2. Create `.env` file from example:
+```bash
+cp .env.example .env
+```
+
+3. Add your Supabase credentials to `.env`:
+```
+SUPABASE_URL=your_supabase_url
+SUPABASE_ANON_KEY=your_anon_key
+```
+
+4. Install dependencies:
+```bash
+flutter pub get
+```
+
+5. Generate code:
+```bash
+flutter pub run build_runner build --delete-conflicting-outputs
+```
+
+6. Run the app:
+```bash
+flutter run
+```
+
+## Building
+
+### Android
+```bash
+flutter build apk --release
+# or for App Bundle
+flutter build appbundle --release
+```
+
+### iOS
+```bash
+flutter build ipa --release
+```
+
+### Web
+```bash
+flutter build web --release
+```
+
+## CI/CD
+
+This project uses **Codemagic** for CI/CD. See `codemagic.yaml` for workflow configurations.
+
+## Project Structure
 
 ```
 lib/
 ├── core/
-│   ├── constants/     # App-wide constants & API endpoints
-│   ├── providers/     # Riverpod state providers
-│   ├── services/      # Supabase & API services
-│   └── theme/         # App theming (colors, typography)
+│   ├── constants/    # App constants
+│   ├── providers/    # Global providers
+│   ├── services/     # API & Supabase services
+│   └── theme/        # App theming
 ├── features/
-│   ├── auth/          # Authentication screens
-│   ├── home/          # Dashboard & navigation
-│   ├── wallet/        # Currency & transactions
-│   ├── communities/   # Community features
-│   ├── quests/        # Gamification
-│   ├── chat/          # Messaging
-│   └── profile/       # User profile
+│   ├── auth/         # Authentication
+│   ├── communities/  # Communities & Sectors
+│   ├── home/         # Home screen
+│   ├── quests/       # Quest system
+│   └── wallet/       # Wallet & transactions
 └── shared/
-    ├── models/        # Data models
-    └── widgets/       # Reusable UI components
+    ├── models/       # Data models
+    └── widgets/      # Reusable widgets
 ```
 
-## 🛠️ Tech Stack
+## License
 
-| Layer | Technology |
-|-------|------------|
-| **Frontend** | Flutter (Dart) |
-| **State Management** | Riverpod |
-| **Backend** | Go Services |
-| **Database** | PostgreSQL (Supabase) |
-| **Authentication** | Supabase Auth |
-| **Real-time** | WebSockets |
-
-## 🚀 Getting Started
-
-### Prerequisites
-
-- Flutter SDK 3.10.7+
-- Dart 3.0+
-- Supabase project (for backend)
-- Go 1.21+ (for backend services)
-
-### Setup
-
-1. **Clone & Install Dependencies**
-   ```bash
-   git clone <repository>
-   cd monocle_app
-   flutter pub get
-   ```
-
-2. **Configure Supabase**
-   - Create a Supabase project at [supabase.com](https://supabase.com)
-   - Run the SQL schema in `supabase_schema.sql`
-   - Update `lib/core/constants/app_constants.dart`:
-     ```dart
-     static const String supabaseUrl = 'YOUR_SUPABASE_URL';
-     static const String supabaseAnonKey = 'YOUR_SUPABASE_ANON_KEY';
-     ```
-
-3. **Generate Code** (for JSON serialization)
-   ```bash
-   flutter pub run build_runner build --delete-conflicting-outputs
-   ```
-
-4. **Run the App**
-   ```bash
-   # Web
-   flutter run -d chrome
-
-   # Android
-   flutter run -d android
-
-   # iOS
-   flutter run -d ios
-
-   # Windows
-   flutter run -d windows
-
-   # macOS
-   flutter run -d macos
-
-   # Linux
-   flutter run -d linux
-   ```
-
-## 💰 Economy System
-
-### Sparks (⚡ Soft Currency)
-- Earned through engagement (quests, missions, events)
-- Used for community access, mini-games, tipping
-- Zero transaction fees (database ledger)
-
-### Orbs (🔮 Hard Currency)
-- Purchased via IAP
-- Used for premium features, NFT-like assets
-- Can be converted to Sparks
-
-## 🎮 Gamification
-
-| Feature | Description |
-|---------|-------------|
-| **Quests** | Story-driven challenges with rare rewards |
-| **Daily Missions** | Quick tasks that reset daily |
-| **Events** | Time-limited activities with bonus multipliers |
-| **Achievements** | Milestone-based rewards |
-
-## 📱 Supported Platforms
-
-| Platform | Status |
-|----------|--------|
-| Android | ✅ Ready |
-| iOS | ✅ Ready |
-| Web | ✅ Ready |
-| Windows | ✅ Ready |
-| macOS | ✅ Ready |
-| Linux | ✅ Ready |
-
-## 🔐 Security
-
-- Row Level Security (RLS) on all database tables
-- JWT-based authentication
-- Server-side validation for all transactions
-- Immutable transaction ledger
-
-## 📄 License
-
-This project is proprietary software.
-
----
-
-Built with 💜 using Flutter & Supabase
+This project is proprietary and confidential.

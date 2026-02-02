@@ -1,0 +1,80 @@
+workflows:
+  # --- WORKFLOW 1: ANDROID ---
+  android-workflow:
+    name: Monocle Android
+    instance_type: linux_x2
+    max_build_duration: 60
+    environment:
+      android_signing:
+        - monocle_keystore
+      groups:
+        - google_play_credentials
+      flutter: stable
+      java: 17
+    scripts:
+      - name: Set up local.properties
+        script: echo "flutter.sdk=$HOME/programs/flutter" > "$CM_BUILD_DIR/android/local.properties"
+      - name: Get Flutter packages
+        script: flutter pub get
+      - name: Build code generation
+        script: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Build Android APK
+        script: flutter build apk --release
+      - name: Build Android App Bundle
+        script: flutter build appbundle --release
+    artifacts:
+      - build/app/outputs/flutter-apk/*.apk
+      - build/app/outputs/bundle/release/*.aab
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com
+
+  # --- WORKFLOW 2: iOS ---
+  ios-workflow:
+    name: Monocle iOS
+    instance_type: mac_mini_m2
+    max_build_duration: 90
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.monocle.app
+      groups:
+        - app_store_credentials
+      flutter: stable
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Get Flutter packages
+        script: flutter pub get
+      - name: Build code generation
+        script: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Install CocoaPods
+        script: |
+          cd ios
+          pod install
+      - name: Build iOS IPA
+        script: flutter build ipa --release --export-options-plist=/Users/builder/export_options.plist
+    artifacts:
+      - build/ios/ipa/*.ipa
+    publishing:
+      email:
+        recipients:
+          - your-email@example.com
+
+  # --- WORKFLOW 3: WEB ---
+  web-workflow:
+    name: Monocle Web
+    instance_type: linux_x2
+    max_build_duration: 30
+    environment:
+      flutter: stable
+    scripts:
+      - name: Get Flutter packages
+        script: flutter pub get
+      - name: Build code generation
+        script: flutter pub run build_runner build --delete-conflicting-outputs
+      - name: Build Web
+        script: flutter build web --release
+    artifacts:
+      - build/web/**

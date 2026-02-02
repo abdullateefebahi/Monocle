@@ -7,34 +7,32 @@ part of 'quest_model.dart';
 // **************************************************************************
 
 QuestModel _$QuestModelFromJson(Map<String, dynamic> json) => QuestModel(
-  id: json['id'] as String,
-  title: json['title'] as String,
-  description: json['description'] as String,
-  type: $enumDecode(_$QuestTypeEnumMap, json['type']),
-  iconUrl: json['icon_url'] as String?,
-  rarity:
-      $enumDecodeNullable(_$QuestRarityEnumMap, json['rarity']) ??
-      QuestRarity.common,
-  rewardSparks: (json['reward_sparks'] as num?)?.toInt() ?? 0,
-  rewardOrbs: (json['reward_orbs'] as num?)?.toInt() ?? 0,
-  xpReward: (json['xp_reward'] as num?)?.toInt() ?? 0,
-  objectives:
-      (json['objectives'] as List<dynamic>?)
-          ?.map((e) => QuestObjective.fromJson(e as Map<String, dynamic>))
-          .toList() ??
-      [],
-  startDate: json['start_date'] == null
-      ? null
-      : DateTime.parse(json['start_date'] as String),
-  endDate: json['end_date'] == null
-      ? null
-      : DateTime.parse(json['end_date'] as String),
-  maxCompletions: (json['max_completions'] as num?)?.toInt(),
-  currentCompletions: (json['current_completions'] as num?)?.toInt() ?? 0,
-  isRepeatable: json['is_repeatable'] as bool? ?? false,
-  communityId: json['community_id'] as String?,
-  createdAt: DateTime.parse(json['created_at'] as String),
-);
+      id: json['id'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      type: $enumDecode(_$QuestTypeEnumMap, json['type']),
+      iconUrl: json['icon_url'] as String?,
+      rarity: $enumDecodeNullable(_$QuestRarityEnumMap, json['rarity']) ??
+          QuestRarity.common,
+      rewardSparks: (json['reward_sparks'] as num?)?.toInt() ?? 0,
+      rewardOrbs: (json['reward_orbs'] as num?)?.toInt() ?? 0,
+      xpReward: (json['xp_reward'] as num?)?.toInt() ?? 0,
+      objectives: (json['objectives'] as List<dynamic>?)
+              ?.map((e) => QuestObjective.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          [],
+      startDate: json['start_date'] == null
+          ? null
+          : DateTime.parse(json['start_date'] as String),
+      endDate: json['end_date'] == null
+          ? null
+          : DateTime.parse(json['end_date'] as String),
+      maxCompletions: (json['max_completions'] as num?)?.toInt(),
+      currentCompletions: (json['current_completions'] as num?)?.toInt() ?? 0,
+      isRepeatable: json['is_repeatable'] as bool? ?? false,
+      communityId: json['community_id'] as String?,
+      createdAt: DateTime.parse(json['created_at'] as String),
+    );
 
 Map<String, dynamic> _$QuestModelToJson(QuestModel instance) =>
     <String, dynamic>{
@@ -113,8 +111,7 @@ UserQuestProgress _$UserQuestProgressFromJson(Map<String, dynamic> json) =>
       id: json['id'] as String,
       questId: json['questId'] as String,
       userId: json['userId'] as String,
-      status:
-          $enumDecodeNullable(_$QuestStatusEnumMap, json['status']) ??
+      status: $enumDecodeNullable(_$QuestStatusEnumMap, json['status']) ??
           QuestStatus.active,
       objectives: (json['objectives'] as List<dynamic>)
           .map((e) => QuestObjective.fromJson(e as Map<String, dynamic>))
@@ -149,18 +146,18 @@ const _$QuestStatusEnumMap = {
 };
 
 MissionModel _$MissionModelFromJson(Map<String, dynamic> json) => MissionModel(
-  id: json['id'] as String,
-  title: json['title'] as String,
-  description: json['description'] as String,
-  rewardSparks: (json['rewardSparks'] as num?)?.toInt() ?? 0,
-  rewardOrbs: (json['rewardOrbs'] as num?)?.toInt() ?? 0,
-  objectiveType: $enumDecode(_$ObjectiveTypeEnumMap, json['objectiveType']),
-  targetCount: (json['targetCount'] as num).toInt(),
-  currentCount: (json['currentCount'] as num?)?.toInt() ?? 0,
-  isComplete: json['isComplete'] as bool? ?? false,
-  isClaimed: json['isClaimed'] as bool? ?? false,
-  availableUntil: DateTime.parse(json['availableUntil'] as String),
-);
+      id: json['id'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      rewardSparks: (json['rewardSparks'] as num?)?.toInt() ?? 0,
+      rewardOrbs: (json['rewardOrbs'] as num?)?.toInt() ?? 0,
+      objectiveType: $enumDecode(_$ObjectiveTypeEnumMap, json['objectiveType']),
+      targetCount: (json['targetCount'] as num).toInt(),
+      currentCount: (json['currentCount'] as num?)?.toInt() ?? 0,
+      isComplete: json['isComplete'] as bool? ?? false,
+      isClaimed: json['isClaimed'] as bool? ?? false,
+      availableUntil: DateTime.parse(json['availableUntil'] as String),
+    );
 
 Map<String, dynamic> _$MissionModelToJson(MissionModel instance) =>
     <String, dynamic>{
@@ -178,20 +175,19 @@ Map<String, dynamic> _$MissionModelToJson(MissionModel instance) =>
     };
 
 EventModel _$EventModelFromJson(Map<String, dynamic> json) => EventModel(
-  id: json['id'] as String,
-  title: json['title'] as String,
-  description: json['description'] as String,
-  bannerUrl: json['bannerUrl'] as String?,
-  startDate: DateTime.parse(json['startDate'] as String),
-  endDate: DateTime.parse(json['endDate'] as String),
-  quests:
-      (json['quests'] as List<dynamic>?)
-          ?.map((e) => QuestModel.fromJson(e as Map<String, dynamic>))
-          .toList() ??
-      const [],
-  bonusMultiplier: (json['bonusMultiplier'] as num?)?.toInt() ?? 1,
-  isActive: json['isActive'] as bool? ?? true,
-);
+      id: json['id'] as String,
+      title: json['title'] as String,
+      description: json['description'] as String,
+      bannerUrl: json['bannerUrl'] as String?,
+      startDate: DateTime.parse(json['startDate'] as String),
+      endDate: DateTime.parse(json['endDate'] as String),
+      quests: (json['quests'] as List<dynamic>?)
+              ?.map((e) => QuestModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
+      bonusMultiplier: (json['bonusMultiplier'] as num?)?.toInt() ?? 1,
+      isActive: json['isActive'] as bool? ?? true,
+    );
 
 Map<String, dynamic> _$EventModelToJson(EventModel instance) =>
     <String, dynamic>{

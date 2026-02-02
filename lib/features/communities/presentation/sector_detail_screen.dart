@@ -52,30 +52,37 @@ class _SectorDetailScreenState extends ConsumerState<SectorDetailScreen>
           child: sectorAsync.when(
             data: (sector) => Column(
               children: [
+                // Fixed header
                 _buildHeader(sector),
-                const SizedBox(height: 16),
-                _buildStats(sector),
-                const SizedBox(height: 20),
-                _buildSearchBar(sector),
-                const SizedBox(height: 20),
-                _buildTabs(sector),
-                const SizedBox(height: 16),
-                Expanded(
-                  child: communitiesAsync.when(
-                    data: (communities) => TabBarView(
-                      controller: _tabController,
-                      children: [
-                        _buildAllCommunitiesTab(communities, sector),
-                        _buildPopularTab(communities, sector),
-                        _buildRecentTab(communities, sector),
-                      ],
-                    ),
-                    loading: () => const Center(
-                      child: CircularProgressIndicator(
-                        color: AppColors.cyanAccent,
+                // Tabs and content - use Flexible to prevent overflow
+                Flexible(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      _buildSearchBar(sector),
+                      const SizedBox(height: 8),
+                      _buildTabs(sector),
+                      const SizedBox(height: 8),
+                      // Community list takes remaining space
+                      Expanded(
+                        child: communitiesAsync.when(
+                          data: (communities) => TabBarView(
+                            controller: _tabController,
+                            children: [
+                              _buildAllCommunitiesTab(communities, sector),
+                              _buildPopularTab(communities, sector),
+                              _buildRecentTab(communities, sector),
+                            ],
+                          ),
+                          loading: () => const Center(
+                            child: CircularProgressIndicator(
+                              color: AppColors.cyanAccent,
+                            ),
+                          ),
+                          error: (error, stack) => _buildErrorState(error),
+                        ),
                       ),
-                    ),
-                    error: (error, stack) => _buildErrorState(error),
+                    ],
                   ),
                 ),
               ],
@@ -99,47 +106,36 @@ class _SectorDetailScreenState extends ConsumerState<SectorDetailScreen>
     final icon = _getIconFromName(sector.iconName);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       child: Row(
         children: [
           IconButton(
             icon: const Icon(Icons.arrow_back, color: Colors.white),
             onPressed: () => Navigator.pop(context),
+            padding: EdgeInsets.zero,
+            constraints: const BoxConstraints(),
           ),
           const SizedBox(width: 12),
           // Sector Icon
           Container(
-            width: 48,
-            height: 48,
+            width: 40,
+            height: 40,
             decoration: BoxDecoration(
               color: color.withValues(alpha: 0.15),
-              borderRadius: BorderRadius.circular(12),
+              borderRadius: BorderRadius.circular(10),
             ),
-            child: Icon(icon, color: color, size: 24),
+            child: Icon(icon, color: color, size: 20),
           ),
-          const SizedBox(width: 16),
+          const SizedBox(width: 12),
           Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '${sector.name} Sector',
-                  style: GoogleFonts.outfit(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white,
-                  ),
-                ),
-                Text(
-                  sector.description ?? '',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: AppColors.textSecondaryDark,
-                  ),
-                  maxLines: 1,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ],
+            child: Text(
+              '${sector.name} Sector',
+              style: GoogleFonts.outfit(
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.white,
+              ),
+              overflow: TextOverflow.ellipsis,
             ),
           ),
         ],
@@ -189,31 +185,32 @@ class _SectorDetailScreenState extends ConsumerState<SectorDetailScreen>
     final color = _getColorFromHex(sector.colorHex);
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
+      padding: const EdgeInsets.symmetric(horizontal: 16),
       child: Container(
+        height: 44,
         decoration: BoxDecoration(
           color: AppColors.surface,
-          borderRadius: BorderRadius.circular(16),
+          borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.white.withValues(alpha: 0.1)),
         ),
         child: TextField(
           onChanged: (value) => setState(() => _searchQuery = value),
-          style: const TextStyle(color: Colors.white),
+          style: const TextStyle(color: Colors.white, fontSize: 14),
           decoration: InputDecoration(
-            hintText: 'Search communities in ${sector.name}...',
-            hintStyle: TextStyle(color: AppColors.textSecondaryDark),
-            prefixIcon: Icon(Icons.search, color: color),
+            hintText: 'Search in ${sector.name}...',
+            hintStyle:
+                TextStyle(color: AppColors.textSecondaryDark, fontSize: 14),
+            prefixIcon: Icon(Icons.search, color: color, size: 20),
             suffixIcon: _searchQuery.isNotEmpty
                 ? IconButton(
-                    icon: const Icon(Icons.clear, color: Colors.white54),
+                    icon: const Icon(Icons.clear,
+                        color: Colors.white54, size: 18),
                     onPressed: () => setState(() => _searchQuery = ''),
                   )
-                : const Icon(Icons.tune, color: Colors.white54),
+                : null,
             border: InputBorder.none,
-            contentPadding: const EdgeInsets.symmetric(
-              horizontal: 16,
-              vertical: 14,
-            ),
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
           ),
         ),
       ),
@@ -224,23 +221,25 @@ class _SectorDetailScreenState extends ConsumerState<SectorDetailScreen>
     final color = _getColorFromHex(sector.colorHex);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 24),
+      height: 40,
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(10),
       ),
       child: TabBar(
         controller: _tabController,
         indicator: BoxDecoration(
           color: color.withValues(alpha: 0.2),
-          borderRadius: BorderRadius.circular(12),
-          border: Border.all(color: color, width: 2),
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(color: color, width: 1.5),
         ),
         dividerColor: Colors.transparent,
         labelColor: color,
         unselectedLabelColor: AppColors.textSecondaryDark,
         indicatorSize: TabBarIndicatorSize.tab,
-        labelStyle: const TextStyle(fontWeight: FontWeight.w600),
+        labelStyle: const TextStyle(fontWeight: FontWeight.w600, fontSize: 13),
+        labelPadding: EdgeInsets.zero,
         tabs: const [
           Tab(text: 'All'),
           Tab(text: 'Popular'),
@@ -487,28 +486,29 @@ class _StatCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
       decoration: BoxDecoration(
         color: AppColors.surface,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(12),
         border: Border.all(color: color.withValues(alpha: 0.3)),
       ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Icon(icon, color: color, size: 24),
-          const SizedBox(height: 8),
+          Icon(icon, color: color, size: 20),
+          const SizedBox(height: 4),
           Text(
             value,
             style: const TextStyle(
               color: Colors.white,
-              fontSize: 18,
+              fontSize: 16,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 4),
           Text(
             label,
-            style: TextStyle(color: AppColors.textSecondaryDark, fontSize: 11),
+            style: TextStyle(color: AppColors.textSecondaryDark, fontSize: 10),
+            overflow: TextOverflow.ellipsis,
           ),
         ],
       ),

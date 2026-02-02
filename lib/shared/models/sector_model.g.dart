@@ -7,20 +7,20 @@ part of 'sector_model.dart';
 // **************************************************************************
 
 SectorModel _$SectorModelFromJson(Map<String, dynamic> json) => SectorModel(
-  id: json['id'] as String,
-  name: json['name'] as String,
-  description: json['description'] as String?,
-  iconName: json['icon_name'] as String?,
-  colorHex: json['color_hex'] as String?,
-  isActive: json['is_active'] as bool? ?? true,
-  displayOrder: (json['display_order'] as num?)?.toInt() ?? 0,
-  createdAt: DateTime.parse(json['created_at'] as String),
-  updatedAt: json['updated_at'] == null
-      ? null
-      : DateTime.parse(json['updated_at'] as String),
-  communityCount: (json['community_count'] as num?)?.toInt(),
-  totalMembers: (json['total_members'] as num?)?.toInt(),
-);
+      id: json['id'] as String,
+      name: json['name'] as String,
+      description: json['description'] as String?,
+      iconName: json['icon_name'] as String?,
+      colorHex: json['color_hex'] as String?,
+      isActive: json['is_active'] as bool? ?? true,
+      displayOrder: (json['display_order'] as num?)?.toInt() ?? 0,
+      createdAt: DateTime.parse(json['created_at'] as String),
+      updatedAt: json['updated_at'] == null
+          ? null
+          : DateTime.parse(json['updated_at'] as String),
+      communityCount: (json['community_count'] as num?)?.toInt(),
+      totalMembers: (json['total_members'] as num?)?.toInt(),
+    );
 
 Map<String, dynamic> _$SectorModelToJson(SectorModel instance) =>
     <String, dynamic>{
