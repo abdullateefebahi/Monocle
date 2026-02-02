@@ -4,7 +4,8 @@ import 'package:url_launcher/url_launcher.dart';
 import 'supabase_service.dart';
 
 class PaystackService {
-  static String get _publicKey => dotenv.env['PAYSTACK_PUBLIC_KEY'] ?? '';
+  // Paystack public key - will be used when implementing full payment flow
+  static String get publicKey => dotenv.env['PAYSTACK_PUBLIC_KEY'] ?? '';
 
   /// Initialize a Paystack transaction and return the checkout URL
   /// This uses Paystack's API to create a transaction

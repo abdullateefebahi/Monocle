@@ -143,44 +143,6 @@ class _SectorDetailScreenState extends ConsumerState<SectorDetailScreen>
     );
   }
 
-  Widget _buildStats(SectorModel sector) {
-    final color = _getColorFromHex(sector.colorHex);
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 24),
-      child: Row(
-        children: [
-          Expanded(
-            child: _StatCard(
-              icon: Icons.group_work,
-              label: 'Communities',
-              value: (sector.communityCount ?? 0).toString(),
-              color: color,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _StatCard(
-              icon: Icons.people,
-              label: 'Members',
-              value: '${sector.totalMembers ?? 0}',
-              color: AppColors.cyanAccent,
-            ),
-          ),
-          const SizedBox(width: 12),
-          Expanded(
-            child: _StatCard(
-              icon: Icons.trending_up,
-              label: 'Active',
-              value: '${((sector.totalMembers ?? 0) * 0.3).toInt()}',
-              color: AppColors.warning,
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
   Widget _buildSearchBar(SectorModel sector) {
     final color = _getColorFromHex(sector.colorHex);
 
@@ -466,53 +428,6 @@ class _SectorDetailScreenState extends ConsumerState<SectorDetailScreen>
     } catch (e) {
       return AppColors.cyanAccent;
     }
-  }
-}
-
-// Stat Card Widget
-class _StatCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-  final Color color;
-
-  const _StatCard({
-    required this.icon,
-    required this.label,
-    required this.value,
-    required this.color,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 10),
-      decoration: BoxDecoration(
-        color: AppColors.surface,
-        borderRadius: BorderRadius.circular(12),
-        border: Border.all(color: color.withValues(alpha: 0.3)),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Icon(icon, color: color, size: 20),
-          const SizedBox(height: 4),
-          Text(
-            value,
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          Text(
-            label,
-            style: TextStyle(color: AppColors.textSecondaryDark, fontSize: 10),
-            overflow: TextOverflow.ellipsis,
-          ),
-        ],
-      ),
-    );
   }
 }
 

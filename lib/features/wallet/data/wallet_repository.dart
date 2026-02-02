@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../../core/services/supabase_service.dart';
@@ -43,7 +44,7 @@ class WalletRepository {
     } catch (e) {
       // Return empty list instead of throwing for better UX (or handle error upstream)
       // For now, let's just log and return empty if table doesn't exist yet
-      print('Error fetching transactions: $e');
+      debugPrint('Error fetching transactions: $e');
       return [];
     }
   }
