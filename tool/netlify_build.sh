@@ -9,6 +9,10 @@ echo "========================================================="
 
 # Create .env file from Netlify environment variables
 echo "Creating .env file from environment variables..."
+# Use Fallback values if variables are empty to prevent build failure
+: ${SUPABASE_URL:="https://placeholder.supabase.co"}
+: ${SUPABASE_ANON_KEY:="placeholder-key"}
+
 cat > .env << EOF
 SUPABASE_URL=$SUPABASE_URL
 SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY
